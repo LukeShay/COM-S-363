@@ -1,0 +1,43 @@
+//Item 1
+MATCH (s:Student)<--(f:Faculty)-->(p1:Person)
+MATCH (s)-->(p2:Person)
+RETURN p2.Name as Student, p1.Name as Mentor
+ORDER BY p1.Name;
+
+//Item 2
+MATCH (s:Student{Classification: "Sophomore"})
+RETURN AVG(s.GPA);
+
+//Item 3
+MATCH (s:Student)<--(:Faculty)-->(p1:Person)
+MATCH (s)-->(p2:Person)
+WHERE (s)-->(:Offering) IS NOT NULL
+RETURN p2.Name as Student, p1.Name as Mentor;
+
+//Item 4
+MATCH (s:Student)-->(p:Person)
+WHERE EXISTS ((s)-[:Taking{Grade: "A"}]->(:Offering))
+RETURN p.Name;
+
+//Item 5
+MATCH (c:Course)
+WHERE EXISTS((c)-->(:Course{CourseCode: "CS311"}))
+RETURN c.CourseCode;
+
+//Item 6
+MATCH (f:Faculty)-->(p:Person)
+WHERE f.Salary >= 100000
+RETURN p.Name, f.Rank;
+
+//Item 7
+MATCH (f:Faculty)-->(s:Student)
+MATCH (s)-->(p1:Person)
+MATCH (f)-->(p2:Person)
+RETURN p2.Name AS Faculty, p1.Name AS Student, s.Classification, s.GPA
+ORDER BY p2.Name;
+
+//Item 8
+MATCH (o:Offering)-->(c:Course)
+MATCH (o)<--(f:Faculty)-->(p:Person)
+MATCH (o)<--(s:Student)
+RETURN o.Section, c.CourseName, p.Name, COUNT(s) as Students;

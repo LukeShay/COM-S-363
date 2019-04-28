@@ -1,0 +1,37 @@
+
+<showtext> //Item 7;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $i in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Faculty[Salary >= 100000]
+  return <Faculty>{$i.Name, $i/Rank}</Faculty>
+}</Item>;
+</showtext>
+
+<showtext> //Item 8;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $s in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Student
+  return <E>{$s.Name, $s.Mentor.Name} </E>
+}</Item>;
+</showtext>
+
+<showtext> //Item 9;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $f in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Faculty
+  return <Faculty> {$f.Name, 
+    <Students> {
+      for $s in $f.Mentoring
+      return <Student>{$s.Name, $s.Classification, $s.GPA}</Student>
+    } </Students>
+  }</Faculty>
+}</Item>;
+</showtext>
+
+<showtext> //Item 10;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $o in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Offering
+  return <Course>{$o.CourseInfo.CourseName, $o.Section, $o.Instructor.Name}</Course>
+}</Item>;
+</showtext>

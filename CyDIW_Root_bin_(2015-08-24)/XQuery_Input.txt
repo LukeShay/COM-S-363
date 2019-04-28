@@ -1,0 +1,98 @@
+<showtext> //Item 1;
+$Saxon:>
+<NS>{
+  for $s in doc("UniversityDocs/Student.xml")/Students/Student
+  let $ps := doc("UniversityDocs/Person.xml")/Persons/Person[ID = $s/StudentID]/Name 
+  let $pm := doc("UniversityDocs/Person.xml")/Persons/Person[ID = $s/MentorID]/Name
+  return  <E> {$ps, $pm} </E>
+}</NS>;	
+</showtext>
+
+<showtext> //Item 2;
+$Saxon:>
+<AvgGPA>{
+  for $cd in distinct-values(doc("UniversityDocs/Student.xml")/Students/Student/Classification)
+  let $s := doc("UniversityDocs/Student.xml")/Students/Student[Classification = $cd]
+  let $av := avg($s/GPA)
+  return <E>{<Classification>{$cd}</Classification>, <GPA>{avg($s/GPA)}</GPA>} </E>
+}</AvgGPA>;
+</showtext>
+
+<showtext> //Item 3;
+$Saxon:>
+<NS>{
+  for $es in distinct-values(doc("UniversityDocs/Enrollment.xml")/Enrollments/Enrollment/StudentID)
+  let $sinfo := doc("UniversityDocs/Student.xml")/Students/Student[StudentID = $es]
+  let $m := doc("UniversityDocs/Person.xml")/Persons/Person[ID = $sinfo/MentorID]
+  let $s := doc("UniversityDocs/Person.xml")/Persons/Person[ID = $sinfo/StudentID]
+  return <E>{$s/Name, $m/Name}</E>
+}</NS>;
+</showtext>
+
+<showtext> //Item 4;
+$Saxon:>
+<Students>{
+  for $s in distinct-values(doc("UniversityDocs/Enrollment.xml")/Enrollments/Enrollment[Grade/text() = 'A']/StudentID)
+  let $student := doc("UniversityDocs/Person.xml")/Persons/Person[ID = $s]
+  return $student/Name
+}</Students>;
+</showtext>
+
+<showtext> //Item 5;
+$Saxon:>
+<Courses>{
+  for $a in doc("UniversityDocs/Course.xml")/Courses/Course[CourseCode = 'CS311']/PreReq
+  return $a
+}</Courses>;
+</showtext>
+
+<showtext> //Item 6;
+$Saxon:>
+<Students>{
+  for $cd in distinct-values(doc("UniversityDocs/Student.xml")/Students/Student/Classification)
+  return <StudentList>{
+    <Classification>{$cd}</Classification>,
+        for $s in doc("UniversityDocs/Student.xml")/Students/Student[Classification = $cd]
+        return <Student>{$s/StudentID, $s/GPA, $s/MentorID, $s/CreditHours}</Student>
+    }</StudentList>
+}</Students>;
+</showtext>
+
+
+<showtext> //Item 7;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $i in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Faculty[Salary >= 100000]
+  return <Faculty>{$i.Name, $i/Rank}</Faculty>
+}</Item>;
+</showtext>
+
+<showtext> //Item 8;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $s in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Student
+  return <E>{$s.Name, $s.Mentor.Name} </E>
+}</Item>;
+</showtext>
+
+<showtext> //Item 9;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $f in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Faculty
+  return <Faculty> {$f.Name, 
+    <Students> {
+      for $s in $f.Mentoring
+      return <Student>{$s.Name, $s.Classification, $s.GPA}</Student>
+    } </Students>
+  }</Faculty>
+}</Item>;
+</showtext>
+
+<showtext> //Item 10;
+$OOXQuery:>
+<Item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{
+  for $o in doc("UniversityOODB(ODMG)Spring2015/UniversityOODB(ODMG).xml")//Offering
+  return <Course>{$o.CourseInfo.CourseName, $o.Section, $o.Instructor.Name}</Course>
+}</Item>;
+</showtext>
+

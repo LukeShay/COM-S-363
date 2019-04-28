@@ -1,3 +1,10 @@
+DROP TABLE Person;
+DROP TABLE Student;
+DROP TABLE Instructor;
+DROP TABLE Enrollment;
+DROP TABLE Course;
+DROP TABLE Offering;
+
 CREATE TABLE Person (
 Name CHAR (20),
 ID CHAR (9) NOT NULL,
@@ -184,11 +191,8 @@ SELECT * FROM Person WHERE Name = "Trevor Horns";
 #Item 30
 DELETE Student, Enrollment FROM Student INNER JOIN Enrollment INNER JOIN Person WHERE Person.Name = "Jan Austin"
 	AND Person.ID =  Enrollment.StudentID AND Person.ID = Student.StudentID;
-
-
-DROP TABLE Person;
-DROP TABLE Student;
-DROP TABLE Instructor;
-DROP TABLE Enrollment;
-DROP TABLE Course;
-DROP TABLE Offering;
+    
+SELECT s.StudentID, s.GPA, s.CreditHours, e.Grade
+FROM Student s, Enrollment e
+WHERE s.StudentID = e.StudentID 
+ORDER BY s.StudentID DESC;
